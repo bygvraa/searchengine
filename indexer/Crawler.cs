@@ -9,15 +9,19 @@ namespace Indexer
     {
         private readonly char[] sep = " \\\n\t\"$'!,?;.:-_**+=)([]{}<>/@&%€#".ToCharArray();
 
+        // Contains the words and their id's
         private Dictionary<string, int> words = new Dictionary<string, int>();
+
+        // Contains the documents
         private List<BEDocument> documents = new List<BEDocument>();
 
         Database mdatabase;
 
         public Crawler(Database db){ mdatabase = db; }
 
-        //Return a dictionary containing all words (as the key)in the file
-        // [f] and the value is the number of occurrences of the key in file.
+        /*
+         * Return a set containing all words in the file.
+        */
         private ISet<string> ExtractWordsInFile(FileInfo f)
         {
             ISet<string> res = new HashSet<string>();
@@ -33,6 +37,10 @@ namespace Indexer
             return res;
         }
 
+        /**
+         * Convert a set of words to a set of id's using the words
+         * dictionary
+         */
         private ISet<int> GetWordIdFromWords(ISet<string> src) {
             ISet<int> res = new HashSet<int>();
 
@@ -43,10 +51,10 @@ namespace Indexer
             return res;
         }
 
-        // Return a dictionary of all the words (the key) in the files contained
-        // in the directory [dir]. Only files with an extension in
-        // [extensions] is read. The value part of the return value is
-        // the number of occurrences of the key.
+        /**
+         * Will index all files contained in the directory [dir] and
+         * having an extension in [extensions]. Will update the words and
+         * documents */
         public void IndexFilesIn(DirectoryInfo dir, List<string> extensions) {
             
             Console.WriteLine("Crawling " + dir.FullName);

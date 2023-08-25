@@ -34,7 +34,7 @@ namespace Indexer
             Execute("CREATE TABLE Occ(wordId INTEGER, docId INTEGER, "
                   + "FOREIGN KEY (wordId) REFERENCES word(id), "
                   + "FOREIGN KEY (docId) REFERENCES document(id))");
-            //Execute("CREATE INDEX word_index ON Occ (wordId)");
+            Execute("CREATE INDEX word_index ON Occ (wordId)");
         }
 
         private void Execute(string sql)

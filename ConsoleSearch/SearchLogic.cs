@@ -8,6 +8,7 @@ namespace ConsoleSearch
     {
         Database mDatabase;
 
+        // a cache for all words in the documents
         Dictionary<string, int> mWords;
 
         public SearchLogic(Database database)
@@ -18,7 +19,7 @@ namespace ConsoleSearch
         }
 
         /* Perform search of documents containing words from query. The result will
-         * contain details about amost maxAmount of documents.
+         * contain details about up to maxAmount of documents.
          */
         public SearchResult Search(String[] query, int maxAmount)
         {

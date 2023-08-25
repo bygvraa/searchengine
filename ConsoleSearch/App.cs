@@ -5,9 +5,6 @@ namespace ConsoleSearch
 {
     public class App
     {
-        public App()
-        {
-        }
 
         public void Run()
         {

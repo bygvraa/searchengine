@@ -34,7 +34,10 @@ namespace ConsoleSearch
 
 
 
-        // key is the id of the document, the value is number of search words in the document
+        /** Will perform a search based on a list of word id's. The result
+         * is a list of KeyValuePair, where the key part is the id of the 
+         * documents and the value part is the number of words in the document
+        */
         public List<KeyValuePair<int, int>> GetDocuments(List<int> wordIds)
         {
             var res = new List<KeyValuePair<int, int>>();
@@ -69,6 +72,10 @@ namespace ConsoleSearch
             return res;
         }
 
+        /**
+         * will return x as a ',' separated string. For instance
+         * will AsString([1,2,3]) return "(1,2,3)".
+         */
         private string AsString(List<int> x)
         {
             string res = "(";
