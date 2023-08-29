@@ -18,9 +18,7 @@ namespace ConsoleSearch
 
             _connection = new SqliteConnection(connectionStringBuilder.ConnectionString);
 
-            _connection.Open();
-
-            
+            _connection.Open();          
         }
 
         private void Execute(string sql)
@@ -30,10 +28,6 @@ namespace ConsoleSearch
             cmd.ExecuteNonQuery();
         }
 
-
-
-
-
         /** Will perform a search based on a list of word id's. The result
          * is a list of KeyValuePair, where the key part is the id of the 
          * documents and the value part is the number of words in the document
@@ -42,7 +36,8 @@ namespace ConsoleSearch
         {
             var res = new List<KeyValuePair<int, int>>();
 
-             /*
+             /* Here is an example where we search for documents
+              * containing words with id 2 or id 3.
               * SELECT docId, COUNT(wordId) as count
  FROM Occ
  where wordId in (2,3)
