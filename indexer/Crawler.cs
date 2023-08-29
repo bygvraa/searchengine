@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using CommonStuff.BE;
+using Shared.BE;
 
 namespace Indexer
 {

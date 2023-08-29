@@ -8,6 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\CommonStuff\CommonStuff.csproj" />
+    <ProjectReference Include="..\CommonStuff\Shared.csproj" />
   </ItemGroup>
 </Project>

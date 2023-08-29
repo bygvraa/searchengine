@@ -1,4 +1,4 @@
-﻿using CommonStuff;
+﻿using Shared;
 
 namespace Renamer;
 

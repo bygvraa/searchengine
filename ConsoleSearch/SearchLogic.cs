@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using CommonStuff.BE;
+using Shared.BE;
 
 namespace ConsoleSearch
 {

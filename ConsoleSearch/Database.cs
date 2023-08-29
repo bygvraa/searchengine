@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using CommonStuff;
-using CommonStuff.BE;
+using Shared;
+using Shared.BE;
 using Microsoft.Data.Sqlite;
 
 namespace ConsoleSearch

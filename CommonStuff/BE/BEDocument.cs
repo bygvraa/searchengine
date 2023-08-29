@@ -1,5 +1,5 @@
 ﻿using System;
-namespace CommonStuff.BE
+namespace Shared.BE
 {
     public class BEDocument
     {

@@ -1,5 +1,5 @@
 ﻿using System;
-using CommonStuff.BE;
+using Shared.BE;
 
 namespace ConsoleSearch
 {

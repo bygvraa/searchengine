@@ -1,7 +1,4 @@
 ﻿using System;
-using System.IO;
-using CommonStuff;
-using Microsoft.Data.Sqlite;
 
 namespace Indexer
 {

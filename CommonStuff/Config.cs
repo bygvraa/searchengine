@@ -1,5 +1,5 @@
 ﻿using System;
-namespace CommonStuff
+namespace Shared
 {
     public class Config
     {
