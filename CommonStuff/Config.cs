@@ -3,8 +3,8 @@ namespace Shared
 {
     public class Config
     {
-        public static string FOLDER = @"/Users/oleeriksen/Data/seData/small";
+        public static string FOLDER = @"/Users/developer/git/data/small";
 
-        public static string DATABASE = @"/Users/oleeriksen/Data/searchDB.db";
+        public static string DATABASE = @"/Users/developer/git/data/searchDB.db";
     }
 }
