@@ -8,11 +8,10 @@ namespace ConsoleSearch
 
         public void Run()
         {
-            SearchLogic mSearchLogic = new SearchLogic(new Database());
-            
+            var searchLogic = new SearchLogic(new Database()); // dep. injection - any db will do
 
             Console.WriteLine("Console Search");
-            
+
             while (true)
             {
                 Console.WriteLine("enter search terms - q for quit");
@@ -20,11 +19,10 @@ namespace ConsoleSearch
                 if (input.Equals("q")) break;
 
                 var query = input.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-               
+                var result = searchLogic.Search(query, 10);
 
-                var result = mSearchLogic.Search(query, 10);
-
-                if (result.Ignored.Count > 0) {
+                if (result.Ignored.Count > 0)
+                {
                     Console.WriteLine("Ignored: ");
                     foreach (var aWord in result.Ignored)
                     {
@@ -33,8 +31,9 @@ namespace ConsoleSearch
                 }
 
                 int idx = 0;
-                foreach (var doc in result.DocumentHits) {
-                    Console.WriteLine("" + (idx+1) + ": " + doc.Document.mUrl + " -- contains " + doc.NoOfHits + " search terms");
+                foreach (var doc in result.DocumentHits)
+                {
+                    Console.WriteLine("" + (idx + 1) + ": " + doc.Document.mUrl + " -- contains " + doc.NoOfHits + " search terms");
                     Console.WriteLine("Index time: " + doc.Document.mIdxTime + ". Creation time: " + doc.Document.mCreationTime);
                     Console.WriteLine();
                     idx++;

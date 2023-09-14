@@ -6,16 +6,15 @@ namespace ConsoleSearch
 {
     public class SearchLogic
     {
-        Database mDatabase;
+        readonly Database database;
 
         // a cache for all words in the documents
-        Dictionary<string, int> mWords;
+        readonly Dictionary<string, int> words;
 
-        public SearchLogic(Database database)
+        public SearchLogic(Database _database)
         {
-            mDatabase = database;
-            mWords = mDatabase.GetAllWords();
-
+            database = _database;
+            words = database.GetAllWords();
         }
 
         /* Perform search of documents containing words from query. The result will
@@ -31,7 +30,7 @@ namespace ConsoleSearch
             var wordIds = GetWordIds(query, out ignored);
 
             // perform the search - get all docIds
-            var docIds =  mDatabase.GetDocuments(wordIds);
+            var docIds = database.GetDocuments(wordIds);
 
             // get ids for the first maxAmount             
             var top = new List<int>();
@@ -40,31 +39,31 @@ namespace ConsoleSearch
 
             // compose the result.
             // all the documentHit
-            List<DocumentHit> docresult = new List<DocumentHit>();
+            var docresult = new List<DocumentHit>();
             int idx = 0;
-            foreach (var doc in mDatabase.GetDocDetails(top))            
+
+            foreach (var doc in database.GetDocDetails(top))
+            {
                 docresult.Add(new DocumentHit(doc, docIds[idx++].Value));
-
-
+            }
             return new SearchResult(query, docIds.Count, docresult, ignored, DateTime.Now - start);
         }
 
         private List<int> GetWordIds(String[] query, out List<string> outIgnored)
         {
-            var res = new List<int>();
+            var result = new List<int>();
             var ignored = new List<string>();
-            
+
             foreach (var aWord in query)
             {
-                if (mWords.ContainsKey(aWord))
-                    res.Add(mWords[aWord]);
+                if (words.ContainsKey(aWord))
+                    result.Add(words[aWord]);
                 else
                     ignored.Add(aWord);
             }
             outIgnored = ignored;
-            return res;
+            return result;
         }
 
-       
     }
 }
