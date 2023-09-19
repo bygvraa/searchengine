@@ -16,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Renamer", "Renamer\Renamer.csproj", "{A7B6E6F5-858A-4465-A0B5-973A79ACAAAE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Search", "Search\Search.csproj", "{AC96343D-D37B-4C75-9588-7E1101B8288C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -38,6 +40,10 @@ Global
 		{A7B6E6F5-858A-4465-A0B5-973A79ACAAAE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A7B6E6F5-858A-4465-A0B5-973A79ACAAAE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A7B6E6F5-858A-4465-A0B5-973A79ACAAAE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC96343D-D37B-4C75-9588-7E1101B8288C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC96343D-D37B-4C75-9588-7E1101B8288C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC96343D-D37B-4C75-9588-7E1101B8288C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC96343D-D37B-4C75-9588-7E1101B8288C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

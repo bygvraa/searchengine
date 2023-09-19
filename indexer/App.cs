@@ -1,43 +1,58 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Shared;
 
 namespace Indexer
 {
     public class App
     {
-        public App()
-        {
-        }
-
         public void Run()
         {
-            Database db = new Database();
-            Crawler crawler = new Crawler(db);
-            
+            var database = new Database();
+            var crawler = new Crawler(database);
 
-            var root = new DirectoryInfo(Config.FOLDER);
+            var rootDir = new DirectoryInfo(Config.FOLDER);
 
-            DateTime start = DateTime.Now;
+            DateTime startTime = DateTime.Now;
 
-            crawler.IndexFilesIn(root, new List<string> { ".txt"});
-            
+            // Perform the indexing
+            var fileExtensions = new List<string> { ".txt" };
+            crawler.IndexFilesIn(rootDir, fileExtensions);
 
-            TimeSpan used = DateTime.Now - start;
-            Console.WriteLine("DONE! used " + used.TotalMilliseconds);
+            TimeSpan usedTime = DateTime.Now - startTime;
 
-            var all = db.GetAllWords();
+            var indexedWords = database.GetAllWords();
 
-            foreach (var p in all)
+            // Inform about indexing completion
+            Console.WriteLine("\nIndexing completed in " + usedTime.TotalMilliseconds + " milliseconds.");
+            Console.WriteLine("Indexed " + indexedWords.Count + " word(s).");
+            Console.WriteLine("Indexed " + crawler.docCount + " document(s).");
+            Console.WriteLine("Indexed " + crawler.dirCount + " folder(s).\n");
+
+            while (true)
             {
-                Console.WriteLine("<" + p.Key + ", " + p.Value + ">");
-                //break;
+                Console.Write("Enter the number of words you want to see: ");
+                string input = Console.ReadLine();
+
+                if (int.TryParse(input, out int amount))
+                {
+                    // Display the specified number of words
+                    for (int i = 0; i < Math.Min(amount, indexedWords.Count); i++)
+                    {
+                        var word = indexedWords.ElementAt(i);
+                        Console.WriteLine("<" + word.Key + ", " + word.Value + ">");
+                    }
+                    break;
+                }
+                else
+                {
+                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                }
             }
 
-
         }
-
 
     }
 }

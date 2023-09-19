@@ -1,7 +1,7 @@
 ﻿using System;
 using Shared.BE;
 
-namespace ConsoleSearch
+namespace Shared
 {
     /**
      * A class used to represent a document together with a

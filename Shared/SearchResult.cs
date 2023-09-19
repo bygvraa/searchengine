@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ConsoleSearch
+namespace Shared
 {
     /*
      * A data class representing the result of a search.

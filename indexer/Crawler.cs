@@ -10,22 +10,30 @@ namespace Indexer
         private readonly char[] sep = " \\\n\t\"$'!,?;.:-_**+=)([]{}<>/@&%€#".ToCharArray();
 
         // Contains the words and their id's
-        private Dictionary<string, int> words = new Dictionary<string, int>();
+        private readonly Dictionary<string, int> words = new();
 
         // Contains the documents
-        private List<BEDocument> documents = new List<BEDocument>();
+        private readonly List<BEDocument> documents = new();
 
-        Database mdatabase;
+        public int docCount;
 
-        public Crawler(Database db){ mdatabase = db; }
+        public int dirCount;
+
+        readonly Database database;
+
+        public Crawler(Database _database)
+        {
+            database = _database;
+        }
 
         /*
          * Return a set containing all words in the file.
         */
         private ISet<string> ExtractWordsInFile(FileInfo f)
         {
-            ISet<string> res = new HashSet<string>();
+            var res = new HashSet<string>();
             var content = File.ReadAllLines(f.FullName);
+
             foreach (var line in content)
             {
                 foreach (var aWord in line.Split(sep, StringSplitOptions.RemoveEmptyEntries))
@@ -33,7 +41,6 @@ namespace Indexer
                     res.Add(aWord);
                 }
             }
-
             return res;
         }
 
@@ -41,10 +48,11 @@ namespace Indexer
          * Convert a set of words to a set of id's using the words
          * dictionary
          */
-        private ISet<int> GetWordIdFromWords(ISet<string> src) {
-            ISet<int> res = new HashSet<int>();
+        private ISet<int> GetWordIdFromWords(ISet<string> src)
+        {
+            var res = new HashSet<int>();
 
-            foreach ( var p in src)
+            foreach (var p in src)
             {
                 res.Add(words[p]);
             }
@@ -55,14 +63,15 @@ namespace Indexer
          * Will index all files contained in the directory [dir] and
          * having an extension in [extensions]. Will update the words and
          * documents */
-        public void IndexFilesIn(DirectoryInfo dir, List<string> extensions) {
-            
+        public void IndexFilesIn(DirectoryInfo dir, List<string> extensions)
+        {
             Console.WriteLine("Crawling " + dir.FullName);
+            dirCount++;
 
             foreach (var file in dir.EnumerateFiles())
                 if (extensions.Contains(file.Extension))
                 {
-                    BEDocument newDoc = new BEDocument
+                    var newDoc = new BEDocument
                     {
                         mId = documents.Count + 1,
                         mUrl = file.FullName,
@@ -70,10 +79,12 @@ namespace Indexer
                         mCreationTime = file.CreationTime.ToString()
                     };
                     documents.Add(newDoc);
-                    
-                    mdatabase.InsertDocument(newDoc);
-                    Dictionary<string, int> newWords = new Dictionary<string, int>();
-                    ISet<string> wordsInFile = ExtractWordsInFile(file);
+                    database.InsertDocument(newDoc);
+                    docCount++;
+
+                    var newWords = new Dictionary<string, int>();
+                    var wordsInFile = ExtractWordsInFile(file);
+
                     foreach (var aWord in wordsInFile)
                     {
                         if (!words.ContainsKey(aWord))
@@ -82,15 +93,16 @@ namespace Indexer
                             newWords.Add(aWord, words[aWord]);
                         }
                     }
-                    mdatabase.InsertAllWords(newWords);
-
-                    mdatabase.InsertAllOcc(newDoc.mId, GetWordIdFromWords(wordsInFile));
+                    database.InsertAllWords(newWords);
+                    database.InsertAllOcc(newDoc.mId, GetWordIdFromWords(wordsInFile));
                 }
 
-            foreach (var d in dir.EnumerateDirectories())
-                IndexFilesIn(d, extensions);
+            // Recursion
+            foreach (var subDir in dir.EnumerateDirectories())
+            {
+                IndexFilesIn(subDir, extensions);
+            }
         }
 
-        
     }
 }

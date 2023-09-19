@@ -1,19 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Shared;
+﻿using Shared;
 
-namespace ConsoleSearch
+namespace Search.Services
 {
-    public class SearchLogic : ISearchLogic
+    public class SearchService
     {
-        readonly Database database;
-        readonly Dictionary<string, int> words; // a cache for all words in the documents
+        private readonly Database _db;
+        private readonly Dictionary<string, int> _words; // a cache for all words in the documents
 
-        public SearchLogic()
+        public SearchService()
         {
-            database = new Database();
-            words = database.GetAllWords();
+            _db = new Database();
+            _words = _db.GetAllWords();
         }
 
         /* Perform search of documents containing words from query. The result will
@@ -21,27 +18,26 @@ namespace ConsoleSearch
          */
         public SearchResult Search(string[] query, SearchSettings settings)
         {
-            List<string> ignored;
-
             DateTime start = DateTime.Now;
 
             // Convert words to wordids
-            var wordIds = GetWordIds(query, settings.CaseSensitive, out ignored);
+            var wordIds = GetWordIds(query, settings.CaseSensitive, out List<string> ignored);
 
             // perform the search - get all docIds
-            var docIds = database.GetDocuments(wordIds);
+            var docIds = _db.GetDocuments(wordIds);
 
             // get ids for the first maxAmount             
-            var top = new List<int>();
-            foreach (var p in docIds.GetRange(0, Math.Min(settings.ResultLimit, docIds.Count)))
-                top.Add(p.Key);
+            var docs = new List<int>();
+            foreach (var doc in docIds.GetRange(0, Math.Min(settings.ResultLimit, docIds.Count)))
+            {
+                docs.Add(doc.Key);
+            }
 
-            // compose the result.
-            // all the documentHit
+            // compose the result, all the documentHit
             var docresult = new List<DocumentHit>();
             int idx = 0;
 
-            foreach (var doc in database.GetDocDetails(top))
+            foreach (var doc in _db.GetDocDetails(docs))
             {
                 docresult.Add(new DocumentHit(doc, docIds[idx++].Value));
             }
@@ -57,23 +53,22 @@ namespace ConsoleSearch
             {
                 if (caseSensitive)
                 {
-                    if (words.ContainsKey(aWord))
-                        result.Add(words[aWord]);
+                    if (_words.ContainsKey(aWord))
+                        result.Add(_words[aWord]);
                     else
                         ignored.Add(aWord);
                 }
                 else
                 {
                     // Case-insensitive search
-                    var matchingWord = words.Keys.FirstOrDefault(word => string.Equals(word, aWord, StringComparison.OrdinalIgnoreCase));
+                    var matchingWord = _words.Keys.FirstOrDefault(word => string.Equals(word, aWord, StringComparison.OrdinalIgnoreCase));
                     if (matchingWord != null)
-                        result.Add(words[matchingWord]);
+                        result.Add(_words[matchingWord]);
                     else
                         ignored.Add(aWord);
                 }
             }
             return result;
         }
-
     }
 }
