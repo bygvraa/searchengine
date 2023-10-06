@@ -13,20 +13,17 @@ public class SearchController : ControllerBase
     private readonly SearchService _searchService = new();
     private readonly CommandService _commandService = new(_searchSettings);
 
-    public SearchController()
-    { }
+    public SearchController() { }
 
     [HttpGet("{query}")]
     public SearchResult Search(string query)
     {
-        var result = _searchService.Search(query.Split(","), _searchSettings);
-        return result;
+        return _searchService.Search(query.Split(","), _searchSettings);
     }
 
     [HttpGet("/")]
     public string ExecuteCommand(string command)
     {
-        var result = _commandService.ProcessCommand(command);
-        return result;
+        return _commandService.ProcessCommand(command);
     }
 }

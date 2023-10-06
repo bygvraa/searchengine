@@ -1,9 +1,79 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+@inject HttpClient Http
+@inject AppDataService service
 
-<h1>Hello, world!</h1>
+<PageTitle>Search</PageTitle>
 
-Welcome to your new app.
+<h1>Search</h1>
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<p>This component demonstrates fetching data from the server.</p>
+
+<div>
+    <EditForm Model="@search" OnValidSubmit="@HandleValidSubmit">
+        <div>
+            <InputText id="Query" class="form-control"
+                       placeholder="Søg..."
+            @bind-Value="search!.Query" />
+        </div>
+
+        <div>
+            <button type="submit" class="btn btn-primary">
+                Send
+            </button>
+        </div>
+    </EditForm>
+</div>
+
+@if (search!.Result == null)
+{
+}
+else
+{
+    <p>Hits: @search.Result.Hits</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>URL</th>
+                <th>Index time</th>
+                <th>Creation time</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var doc in search.Result!.DocumentHits)
+            {
+                <tr>
+                    <td>@doc.Document.mUrl</td>
+                    <td>@doc.Document.mIdxTime</td>
+                    <td>@doc.Document.mCreationTime</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    public Search? search = new() { };
+
+    private async Task HandleValidSubmit()
+    {
+        await RunSearch(search!.Query!);
+    }
+
+    protected async Task RunSearch(string query)
+    {
+        search!.Result = await service.GetQuery(query);
+        if (search.Result is not null)
+        {
+            var res = search.Result;
+            Console.WriteLine(res.Query);
+            Console.WriteLine(res.Ignored);
+        }
+    }
+
+    public class Search
+    {
+        public string? Query { get; set; }
+        public SearchResult? Result { get; set; }
+    }
+}
