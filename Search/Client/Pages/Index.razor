@@ -63,10 +63,6 @@ else
     protected async Task RunSearch(string query)
     {
         search!.Result = await service.GetQuery(query);
-        if (search.Result is not null)
-        {
-            var res = search.Result;
-        }
     }
 
     public class Search
