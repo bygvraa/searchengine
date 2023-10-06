@@ -8,6 +8,8 @@ namespace Shared
 
         public static string DATABASE = @"C:\Users\Mikkel\code\data\searchDB.db";
 
-        public static string APIADDRESS = @"http://localhost:5171";
+        public static string API_ADDRESS = @"http://localhost:5171";
+
+        public static string LOADBALANCER_ADDRESS = @"http://localhost:5238";
     }
 }

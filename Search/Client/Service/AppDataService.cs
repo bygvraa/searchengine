@@ -11,7 +11,7 @@ namespace Client.Service
         public AppDataService(HttpClient http)
         {
             _http = http;
-            baseAddress = Config.APIADDRESS;
+            baseAddress = Config.LOADBALANCER_ADDRESS;
         }
 
         public async Task<SearchResult?> GetQuery(string query)
