@@ -10,14 +10,14 @@ namespace Shared
      * */
     public class DocumentHit
     {
+        public BEDocument Document { get; set; }
+        public int NoOfHits { get; set; }
+
+        public DocumentHit() { }
         public DocumentHit(BEDocument doc, int noOfHits)
         {
             Document = doc;
             NoOfHits = noOfHits;
         }
-
-        public BEDocument Document { get;  }
-
-        public int NoOfHits { get;  }
     }
 }

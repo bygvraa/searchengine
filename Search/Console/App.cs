@@ -3,15 +3,14 @@ using Shared;
 
 namespace ConsoleSearch
 {
-
     public class App
     {
         public void Run()
         {
-            var searchLogic = SearchFactory.GetSearchLogic();
+            var searchService = SearchFactory.GetSearchService();
 
             var searchSettings = new SearchSettings();
-            var commandLogic = new CommandLogic(searchSettings);
+            var commandService = new CommandService(searchSettings);
 
             Console.WriteLine("Console Search");
 
@@ -23,12 +22,14 @@ namespace ConsoleSearch
 
                 if (input.StartsWith("/"))
                 {
-                    commandLogic.HandleCommand(input);
+                    input = input[1..];
+                    var result = commandService.ProcessCommand(input);
+                    Console.WriteLine(result);
                 }
                 else
                 {
                     var query = input.Split(" ", StringSplitOptions.RemoveEmptyEntries);
-                    var result = searchLogic.Search(query, searchSettings);
+                    var result = searchService.Search(query, searchSettings);
 
                     if (result.Ignored.Count > 0)
                     {

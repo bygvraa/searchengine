@@ -4,7 +4,7 @@ using Microsoft.Data.Sqlite;
 using Shared;
 using Shared.BE;
 
-namespace Search.Services
+namespace Search.Service
 {
     public class Database
     {

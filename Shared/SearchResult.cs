@@ -13,6 +13,13 @@ namespace Shared
      */
     public class SearchResult
     {
+        public String[] Query { get; set; }
+        public int Hits { get; set; }
+        public List<DocumentHit> DocumentHits { get; set; }
+        public List<string> Ignored { get; set; }
+        public TimeSpan TimeUsed { get; set; }
+
+        public SearchResult() { }
         public SearchResult(String[] query, int hits, List<DocumentHit> documents, List<string> ignored, TimeSpan timeUsed)
         {
             Query = query;
@@ -21,15 +28,5 @@ namespace Shared
             Ignored = ignored;
             TimeUsed = timeUsed;
         }
-
-        public String[] Query { get;  }
-
-        public int Hits { get; }
-
-        public List<DocumentHit> DocumentHits { get;  }
-
-        public List<string> Ignored { get; }
-
-        public TimeSpan TimeUsed { get;  }
     }
 }

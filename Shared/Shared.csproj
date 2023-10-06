@@ -7,10 +7,5 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="BE\" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="BE\" />
-  </ItemGroup>
+
 </Project>

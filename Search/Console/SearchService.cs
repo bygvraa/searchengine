@@ -1,8 +1,11 @@
-﻿using Shared;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using Shared;
 
-namespace Search.Services
+namespace ConsoleSearch
 {
-    public class SearchService
+    public class SearchService : ISearchService
     {
         private readonly Database _db;
         private readonly Dictionary<string, int> _words; // a cache for all words in the documents

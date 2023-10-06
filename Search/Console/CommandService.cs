@@ -1,7 +1,8 @@
 using System;
+using System.Collections.Generic;
 using Shared;
 
-namespace Search.Services
+namespace ConsoleSearch
 {
     public class CommandService
     {
