@@ -8,11 +8,11 @@ public class Program
 
         // Add services to the container.
 
-        // CORS skal slåes til i app'en. Ellers kan man ikke hente data fra et andet domæne.
-        var AllowSomeStuff = "_AllowSomeStuff";
+        // CORS skal slÃ¥s til i app'en. Ellers kan man ikke hente data fra et andet domÃ¦ne.
+        var AllowCORS = "_AllowCORS";
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy(name: AllowSomeStuff, builder =>
+            options.AddPolicy(name: AllowCORS, builder =>
             {
                 builder.AllowAnyOrigin()
                        .AllowAnyHeader()
@@ -34,8 +34,7 @@ public class Program
             app.UseSwaggerUI();
         }
 
-        // Configure method
-        app.UseCors(AllowSomeStuff);
+        app.UseCors(AllowCORS);
 
         app.UseHttpsRedirection();
 
@@ -44,6 +43,5 @@ public class Program
         app.MapControllers();
 
         app.Run();
-
     }
 }

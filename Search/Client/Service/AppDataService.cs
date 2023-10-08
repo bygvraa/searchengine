@@ -17,9 +17,7 @@ namespace Client.Service
         public async Task<SearchResult?> GetQuery(string query)
         {
             var url = $"{baseAddress}/Search/{query}";
-            var result = await _http.GetFromJsonAsync<SearchResult>(url);
-
-            return result;
+            return await _http.GetFromJsonAsync<SearchResult>(url);
         }
     }
 }

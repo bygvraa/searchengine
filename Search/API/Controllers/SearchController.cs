@@ -1,5 +1,5 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
 using Search.Service;
 using Shared;
 
@@ -9,11 +9,16 @@ namespace Search.Controllers;
 [Route("[controller]")]
 public class SearchController : ControllerBase
 {
-    static private readonly SearchSettings _searchSettings = new();
-    private readonly SearchService _searchService = new();
-    private readonly CommandService _commandService = new(_searchSettings);
+    private readonly SearchSettings _searchSettings;
+    private readonly SearchService _searchService;
+    private readonly CommandService _commandService;
 
-    public SearchController() { }
+    public SearchController(SearchSettings searchSettings, SearchService searchService)
+    {
+        _searchSettings = searchSettings;
+        _searchService = searchService;
+        _commandService = new CommandService(_searchSettings);
+    }
 
     [HttpGet("{query}")]
     public SearchResult Search(string query)
@@ -21,7 +26,7 @@ public class SearchController : ControllerBase
         return _searchService.Search(query.Split(","), _searchSettings);
     }
 
-    [HttpGet("/")]
+    [HttpGet("/{command}")]
     public string ExecuteCommand(string command)
     {
         return _commandService.ProcessCommand(command);
