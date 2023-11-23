@@ -7,7 +7,7 @@ namespace Server.Service
     {
         private readonly ILogger<SearchService> _logger;
         private readonly HttpClient _httpClient;
-        private Dictionary<string, int> _wordCache; // a cache for all words in the documents
+        private Dictionary<string, int> _wordCache = new(); // a cache for all words in the documents
 
         public SearchService(ILogger<SearchService> logger)
         {
@@ -22,7 +22,7 @@ namespace Server.Service
         {
             DateTime start = DateTime.Now;
 
-            if (_wordCache.Count == 0)
+            if (_wordCache.Count == 0 || _wordCache == null)
             {
                 _logger.LogInformation("No words in cache, fetching from server...");
                 _wordCache = await GetAllWordsAsync();
