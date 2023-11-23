@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Shared;
 
 namespace LoadBalancer.Controllers;
 
@@ -21,9 +22,8 @@ public class LoadBalancerController : ControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
-    [Route("{query}")]
-    public string Search(string query)
+    [HttpGet("{query}")]
+    public void RedirectGet(string query)
     {
         lock (mLock)
         {
@@ -34,6 +34,27 @@ public class LoadBalancerController : ControllerBase
 
             Response.Redirect(server);
         }
-        return "";
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<object?>> RedirectPost([FromBody] Search search)
+    {
+        _logger.LogInformation($"LoadBalancer server requested - next = {next}");
+
+        string server = _servers[next];
+        next = (next + 1) % _servers.Length;
+
+        using var client = new HttpClient();
+        var response = await client.PostAsJsonAsync(server, search);
+
+        if (response.IsSuccessStatusCode)
+        {
+            var result = await response.Content.ReadFromJsonAsync<object>();
+            return Ok(result);
+        }
+        else
+        {
+            return BadRequest("Error in API server");
+        }
     }
 }

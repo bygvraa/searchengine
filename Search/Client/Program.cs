@@ -8,7 +8,7 @@ var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
-builder.Services.AddSingleton<AppDataService, AppDataService>();
+builder.Services.AddSingleton<ClientSearchService, ClientSearchService>();
 builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(Config.LOADBALANCER_ADDRESS) });
 
 await builder.Build().RunAsync();

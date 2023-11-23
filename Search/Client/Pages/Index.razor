@@ -1,7 +1,5 @@
 ﻿@page "/"
-
-@inject HttpClient Http
-@inject AppDataService service
+@inject ClientSearchService service
 
 <PageTitle>Search</PageTitle>
 
@@ -9,26 +7,35 @@
 
 <p>This component demonstrates fetching data from the server.</p>
 
-<div>
-    <EditForm Model="@search" OnValidSubmit="@HandleValidSubmit">
-        <div>
-            <InputText id="Query" class="form-control"
-                       placeholder="Søg..."
-            @bind-Value="search!.Query" />
+<EditForm Model="search" OnValidSubmit="HandleValidSubmit">
+    <div class="search-container">
+        <div class="search-feature d-flex">
+            <div class="search-bar">
+                <input type="search" id="search-query" class="form-control" placeholder="Søg..."
+                    @bind-value="search!.Query" />
+                <ValidationMessage For="() => search.Query" />
+            </div>
+            <div class="search-button">
+                <button type="submit" class="btn btn-primary" disabled="@isLoading">
+                    Søg
+                </button>
+            </div>
         </div>
-
+    </div>
+    <div class="search-settings d-flex flex-column">
         <div>
-            <button type="submit" class="btn btn-primary">
-                Send
-            </button>
+            <label for="search-case-sensitive">Case-sensitivity</label>
+            <input type="checkbox" id="search-case-sensitive" checked @bind-value="search!.Settings.CaseSensitive" />
         </div>
-    </EditForm>
-</div>
+        <div>
+            <label for="search-show-results">Vis antal hits</label>
+            <input type="number" id="search-show-results" placeholder=@search!.Settings.ResultLimit
+                @bind-value="search!.Settings.ResultLimit" />
+        </div>
+    </div>
+</EditForm>
 
-@if (search!.Result == null)
-{
-}
-else
+@if (search!.Result is not null)
 {
     <p>Hits: @search.Result.Hits</p>
     <table class="table">
@@ -40,9 +47,9 @@ else
             </tr>
         </thead>
         <tbody>
-            @foreach (var doc in search.Result!.DocumentHits)
+            @foreach (var doc in search.Result.DocumentHits)
             {
-                <tr>
+                <tr @key="doc.Document.mUrl">
                     <td>@doc.Document.mUrl</td>
                     <td>@doc.Document.mIdxTime</td>
                     <td>@doc.Document.mCreationTime</td>
@@ -53,21 +60,16 @@ else
 }
 
 @code {
-    public Search? search = new() { };
+    public Search search = new() { Settings = new SearchSettings() };
+    private bool isLoading = false;
 
     private async Task HandleValidSubmit()
     {
-        await RunSearch(search!.Query!);
-    }
-
-    protected async Task RunSearch(string query)
-    {
-        search!.Result = await service.GetQuery(query);
-    }
-
-    public class Search
-    {
-        public string? Query { get; set; }
-        public SearchResult? Result { get; set; }
+        if (!string.IsNullOrWhiteSpace(search.Query))
+        {
+            isLoading = true;
+            search.Result = await service.GetSearchResult(search);
+            isLoading = false;
+        }
     }
 }

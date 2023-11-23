@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.7.34031.279
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "API", "Search\API\API.csproj", "{AC96343D-D37B-4C75-9588-7E1101B8288C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Client", "Search\Client\Client.csproj", "{584B2CBF-CD69-48BD-A803-9ADE4834A0B3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Console", "Search\Console\Console.csproj", "{8DF99C5C-09E2-430F-8DAD-5052DF2A9076}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Database", "Search\Database\Database.csproj", "{EFF874D6-817C-40AB-91D2-A47E8779D9DB}"
+EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{0042B50C-3B63-463F-A130-D83833E4056B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Server", "Search\Server\Server.csproj", "{AC96343D-D37B-4C75-9588-7E1101B8288C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Indexer", "Indexer\Indexer.csproj", "{7F4ADC70-20AE-423B-9D46-FABEE2E9F5D2}"
 EndProject

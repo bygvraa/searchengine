@@ -1,7 +1,7 @@
 using System;
 using Shared;
 
-namespace Search.Service
+namespace Server.Service
 {
     public class CommandService
     {

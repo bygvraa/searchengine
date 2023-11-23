@@ -9,10 +9,10 @@ public class Program
         // Add services to the container.
 
         // CORS skal slås til i app'en. Ellers kan man ikke hente data fra et andet domæne.
-        var AllowCORS = "_AllowCORS";
+        var AllowCORS = "AllowAnyOrigin";
         builder.Services.AddCors(options =>
         {
-            options.AddPolicy(name: AllowCORS, builder =>
+            options.AddPolicy(AllowCORS, builder =>
             {
                 builder.AllowAnyOrigin()
                        .AllowAnyHeader()

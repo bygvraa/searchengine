@@ -1,4 +1,4 @@
-using Search.Service;
+using Server.Service;
 using Shared;
 
 public class Program
