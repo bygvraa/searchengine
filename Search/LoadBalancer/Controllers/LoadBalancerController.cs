@@ -14,8 +14,8 @@ public class LoadBalancerController : ControllerBase
         "https://localhost:7234/search"
     };
 
-    private static int next = 0;
-    private static readonly object mLock = new();
+    private static int _next = 0;
+    private static readonly object _lock = new();
 
     public LoadBalancerController(ILogger<LoadBalancerController> logger)
     {
@@ -25,12 +25,12 @@ public class LoadBalancerController : ControllerBase
     [HttpGet("{query}")]
     public void RedirectGet(string query)
     {
-        lock (mLock)
+        lock (_lock)
         {
-            _logger.LogInformation($"LoadBalancer server requested - next = {next}");
+            _logger.LogInformation($"LoadBalancer server requested - next = {_next}");
 
-            string server = $"{_servers[next]}/{query}";
-            next = (next + 1) % _servers.Length;
+            string server = $"{_servers[_next]}/{query}";
+            _next = (_next + 1) % _servers.Length;
 
             Response.Redirect(server);
         }
@@ -39,10 +39,10 @@ public class LoadBalancerController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<object?>> RedirectPost([FromBody] Search search)
     {
-        _logger.LogInformation($"LoadBalancer server requested - next = {next}");
+        _logger.LogInformation($"LoadBalancer server requested - next = {_next}");
 
-        string server = _servers[next];
-        next = (next + 1) % _servers.Length;
+        string server = _servers[_next];
+        _next = (_next + 1) % _servers.Length;
 
         using var client = new HttpClient();
         var response = await client.PostAsJsonAsync(server, search);

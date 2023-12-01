@@ -32,7 +32,6 @@ namespace Server.Service
 
             // Convert words to word ids
             var wordIds = GetWordIds(query, settings.CaseSensitive, out List<string> ignoredWords);
-
             if (wordIds.Count == 0)
             {
                 _logger.LogInformation("No documents found.");
@@ -41,7 +40,6 @@ namespace Server.Service
 
             // Get documents containing the words - get all docIds
             var docIds = await GetDocumentsAsync(wordIds);
-
 
             // get ids for the first maxAmount             
             var docs = new List<int>();
@@ -100,11 +98,9 @@ namespace Server.Service
         private async Task<Dictionary<string, int>> GetAllWordsAsync()
         {
             var route = $"{_httpClient.BaseAddress}database/words";
-
             _logger.LogInformation($"GET: GetAllWords at Database server: {route}");
 
             var response = await _httpClient.GetAsync(route);
-
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadFromJsonAsync<Dictionary<string, int>>();
@@ -123,47 +119,39 @@ namespace Server.Service
         private async Task<List<KeyValuePair<int, int>>> GetDocumentsAsync(List<int> wordIds)
         {
             var route = $"{_httpClient.BaseAddress}database/documents";
-
             _logger.LogInformation($"GET: GetDocuments at Database server: {route}");
 
             var response = await _httpClient.PostAsJsonAsync(route, wordIds);
-
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadFromJsonAsync<List<KeyValuePair<int, int>>>();
                 if (result != null)
                     return result;
-                else
-                    return new List<KeyValuePair<int, int>>();
             }
             else
             {
                 _logger.LogError($"GET: GetDocuments at Database server: {route} --- ERROR");
-                return new List<KeyValuePair<int, int>>();
             }
+            return new List<KeyValuePair<int, int>>();
         }
 
         private async Task<List<BEDocument>> GetDocDetailsAsync(List<int> docIds)
         {
             var route = $"{_httpClient.BaseAddress}database/details";
-
             _logger.LogInformation($"GET: GetDocDetails at Database server: {route}");
 
             var response = await _httpClient.PostAsJsonAsync(route, docIds);
-
             if (response.IsSuccessStatusCode)
             {
                 var result = await response.Content.ReadFromJsonAsync<List<BEDocument>>();
                 if (result != null)
                     return result;
-                else
-                    return new List<BEDocument>();
             }
             else
             {
                 _logger.LogError($"GET: GetDocDetails at Database server: {route} --- ERROR");
-                return new List<BEDocument>();
             }
+            return new List<BEDocument>();
         }
     }
 }
