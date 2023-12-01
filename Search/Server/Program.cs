@@ -24,6 +24,7 @@ public class Program
         builder.Services.AddSingleton<SearchService>();
         builder.Services.AddSingleton<SearchSettings>();
         builder.Services.AddSingleton<CommandService>();
+        builder.Services.AddSingleton(sp => new HttpClient { BaseAddress = new Uri(Config.DATABASE_ADDRESS) });
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -12,7 +12,7 @@ namespace Server.Service
         public SearchService(ILogger<SearchService> logger, HttpClient httpClient)
         {
             _logger = logger;
-            _httpClient = new HttpClient { BaseAddress = new Uri(Config.DATABASE_ADDRESS) };
+            _httpClient = httpClient;
             InitializeWordCache();
         }
 
