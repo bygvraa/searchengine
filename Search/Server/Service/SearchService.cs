@@ -9,11 +9,16 @@ namespace Server.Service
         private readonly HttpClient _httpClient;
         private Dictionary<string, int> _wordCache = new(); // a cache for all words in the documents
 
-        public SearchService(ILogger<SearchService> logger)
+        public SearchService(ILogger<SearchService> logger, HttpClient httpClient)
         {
             _logger = logger;
             _httpClient = new HttpClient { BaseAddress = new Uri(Config.DATABASE_ADDRESS) };
-            _wordCache = GetAllWordsAsync().GetAwaiter().GetResult();
+            InitializeWordCache();
+        }
+
+        private async void InitializeWordCache()
+        {
+            await GetAllWordsAsync();
         }
 
         /* Perform search of documents containing words from query. The result will
@@ -22,10 +27,10 @@ namespace Server.Service
         {
             DateTime start = DateTime.Now;
 
-            if (_wordCache.Count == 0 || _wordCache == null)
+            if (_wordCache.Count == 0)
             {
                 _logger.LogInformation("No words in cache, fetching from server...");
-                _wordCache = await GetAllWordsAsync();
+                await GetAllWordsAsync();
                 if (_wordCache.Count == 0)
                     _logger.LogWarning("Could not fetch words from database server.");
             }
@@ -95,7 +100,7 @@ namespace Server.Service
             return result;
         }
 
-        private async Task<Dictionary<string, int>> GetAllWordsAsync()
+        private async Task GetAllWordsAsync()
         {
             var route = $"{_httpClient.BaseAddress}database/words";
             _logger.LogInformation($"GET: GetAllWords at Database server: {route}");
@@ -105,14 +110,11 @@ namespace Server.Service
             {
                 var result = await response.Content.ReadFromJsonAsync<Dictionary<string, int>>();
                 if (result != null)
-                    return result;
-                else
-                    return new Dictionary<string, int>();
+                    _wordCache = result;
             }
             else
             {
                 _logger.LogWarning($"GET: GetAllWords at Database server: {route} --- ERROR");
-                return new Dictionary<string, int>();
             }
         }
 
