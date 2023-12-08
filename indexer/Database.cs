@@ -11,16 +11,12 @@ namespace Indexer
         private SqliteConnection _connection;
         public Database()
         {
-     
             var connectionStringBuilder = new SqliteConnectionStringBuilder();
 
             connectionStringBuilder.Mode = SqliteOpenMode.ReadWriteCreate;
-           
             connectionStringBuilder.DataSource = Config.DATABASE;
 
-
             _connection = new SqliteConnection(connectionStringBuilder.ConnectionString);
-
             _connection.Open();
 
             Execute("DROP TABLE IF EXISTS Occ");
@@ -68,7 +64,6 @@ namespace Indexer
                     paramId.Value = p.Value;
                     command.ExecuteNonQuery();
                 }
-
                 transaction.Commit();
             }
         }
@@ -95,16 +90,15 @@ namespace Indexer
                 foreach (var p in wordIds)
                 {
                     paramwordId.Value = p;
-                    
                     command.ExecuteNonQuery();
                 }
 
                 transaction.Commit();
             }
         }
+
         public void InsertWord(int id, string word)
         {
-
             var insertCmd = new SqliteCommand("INSERT INTO word(id, name) VALUES(@id,@name)");
             insertCmd.Connection = _connection;
 
@@ -115,12 +109,10 @@ namespace Indexer
             insertCmd.Parameters.Add(pCount);
 
             insertCmd.ExecuteNonQuery();
-
         }
 
         public void InsertDocument(BEDocument doc)
         {
-
             var insertCmd = new SqliteCommand("INSERT INTO document(id, url, idxTime, creationTime) VALUES(@id,@url, @idxTime, @creationTime)");
             insertCmd.Connection = _connection;
 
@@ -136,9 +128,7 @@ namespace Indexer
             var pCreationTime = new SqliteParameter("creationTime", doc.mCreationTime);
             insertCmd.Parameters.Add(pCreationTime);
 
-
             insertCmd.ExecuteNonQuery();
-
         }
 
         public Dictionary<string, int> GetAllWords()
