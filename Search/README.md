@@ -1,11 +1,11 @@
 # Project
-
+## AS IS
 ```mermaid
 %%{init: {"flowchart": {"htmlLabels": false}} }%%
 flowchart LR
     A((User)) --> B
 
-    subgraph "Blazor Web Client"
+    subgraph "Web Client"
         B(HttpClient)
     end
 
@@ -15,11 +15,13 @@ flowchart LR
     end
 
     subgraph "Search Logic Server 1"
-        C -- HTTP --> D1(API Server 1)
+        C -- HTTP --> D1("`Search Logic
+                            *Cache*`")
     end
 
     subgraph "Search Logic Server 2"
-        C -- HTTP --> D2(API Server 2)
+        C -- HTTP --> D2("`Search Logic
+                            *Cache*`")
     end
 
     subgraph "Database Server"
@@ -30,33 +32,76 @@ flowchart LR
 
 ```
 
+## TO BE
+```mermaid
+%%{init: {"flowchart": {"htmlLabels": false}} }%%
+flowchart LR
+    A((User)) --> B
+
+    subgraph "Web Client"
+        B(HttpClient)
+    end
+
+    subgraph "Load Balancer"
+        B -- HTTP --> C("`Load Balancer
+                        *Round Robin*`")
+    end
+
+    subgraph "Search Logic Server 1"
+        C -- HTTP --> D1("`Search Logic
+                            *Cache*`")
+    end
+
+    subgraph "Search Logic Server 2"
+        C -- HTTP --> D2("`Search Logic
+                            *Cache*`")
+    end
+
+    subgraph "Load Balancer"
+        D1 -- HTTP --> E(HttpClient)
+        D2 -- HTTP --> E(HttpClient)
+    end
+
+    subgraph "Database Server 1"
+        E -- HTTP --> F1(HttpClient)
+        F1 --> G1[(Database)]
+    end
+
+    subgraph "Database Server 2"
+        E -- HTTP --> F2(HttpClient)
+        F2 --> G2[(Database)]
+    end
+
+```
+
 ## Flow
 ```mermaid
 sequenceDiagram
-    participant Blazor Web Client
-    participant Load Balancer
-    participant Search Logic Server
-    participant Database Server
+    participant A as Web Client
+    participant B as Load Balancer
+    participant C as Search Logic Server
+    participant D as Database Server
 
-    Blazor Web Client ->>+ Load Balancer: Send Search Request
+    autonumber
 
-    Load Balancer ->>+ Search Logic Server: Redirect Request
+    A ->>+ B: Send Search Request
+    B ->>+ C: Redirect Request
 
-    Search Logic Server->>+Database Server: GetDocuments Request
-    Database Server-->>-Search Logic Server: Respond with Document IDs
-    Search Logic Server->>+Database Server: GetDocDetails Request
-    Database Server-->>-Search Logic Server: Respond with Document Details
-
-    Search Logic Server->>+Cache: Check Cache for Words
+    C->>+C: Check Cache for Words
     alt Cache Hit
-        Cache-->>-Search Logic Server: Respond with Cached Words
+        C-->>-C: Respond with Cached Words
     else Cache Miss
-        Search Logic Server->>+Database Server: GetAllWords Request
-        Database Server-->>-Search Logic Server: Respond with All Words
-        Search Logic Server->>+Cache: Cache Words
+        C->>+D: GetAllWords Request
+        D-->>-C: Respond with All Words
+        C->>+C: Cache Words
     end
 
-    Search Logic Server-->>-Load Balancer: Respond with Search Result
-    Load Balancer-->>-Blazor Web Client: Respond with Search Result
+    C->>+D: GetDocuments Request
+    D-->>-C: Respond with Document IDs
+    C->>+D: GetDocDetails Request
+    D-->>-C: Respond with Document Details
+
+    C-->>-B: Respond with Search Result
+    B-->>-A: Respond with Search Result
 
 ```
