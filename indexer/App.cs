@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Shared;
 
 namespace Indexer
@@ -10,49 +11,45 @@ namespace Indexer
     {
         public void Run()
         {
-            var database = new Database();
-            var crawler = new Crawler(database);
-
-            var rootDir = new DirectoryInfo(Config.FOLDER);
-
-            DateTime startTime = DateTime.Now;
-
-            // Perform the indexing
+            var rootDir = new DirectoryInfo(Config.DATA);
             var fileExtensions = new List<string> { ".txt" };
-            crawler.IndexFilesIn(rootDir, fileExtensions);
-
-            TimeSpan usedTime = DateTime.Now - startTime;
-
-            var indexedWords = database.GetAllWords();
-
-            // Inform about indexing completion
-            Console.WriteLine("\nIndexing completed in " + usedTime.TotalMilliseconds + " milliseconds.");
-            Console.WriteLine("Indexed " + indexedWords.Count + " word(s).");
-            Console.WriteLine("Indexed " + crawler.docCount + " document(s).");
-            Console.WriteLine("Indexed " + crawler.dirCount + " folder(s).\n");
+            var folders = rootDir.GetDirectories().ToDictionary(dir => dir.Name);
 
             while (true)
             {
-                Console.Write("Enter the number of words you want to see: ");
+                Console.Write("Enter the name of the folder you want to index, or 'q' to quit: ");
                 string input = Console.ReadLine();
 
-                if (int.TryParse(input, out int amount))
+                if (input == "q") break;
+
+                if (folders.TryGetValue(input, out var folder))
                 {
-                    // Display the specified number of words
-                    for (int i = 0; i < Math.Min(amount, indexedWords.Count); i++)
-                    {
-                        var word = indexedWords.ElementAt(i);
-                        Console.WriteLine("<" + word.Key + ", " + word.Value + ">");
-                    }
-                    break;
+                    var database = new Database(folder.Name);
+                    var crawler = new Crawler(database);
+
+                    DateTime start = DateTime.Now;
+
+                    // Perform the indexing
+                    crawler.IndexFilesIn(folder, fileExtensions);
+
+                    TimeSpan used = DateTime.Now - start;
+
+                    var words = database.GetAllWords();
+
+                    // Inform about indexing completion
+                    var output = new StringBuilder();
+                    output.AppendLine($"\nIndexing completed in {used.TotalSeconds} seconds.");
+                    output.AppendLine($"Indexed {words.Count} word(s).");
+                    output.AppendLine($"Indexed {crawler.docCount} document(s).");
+                    output.AppendLine($"Indexed {crawler.dirCount} folder(s).\n");
+                    Console.WriteLine(output.ToString());
                 }
                 else
                 {
-                    Console.WriteLine("Invalid input. Please enter a valid number.");
+                    var folderNames = string.Join(", ", folders.Keys);
+                    Console.WriteLine($"Invalid input. Please enter a valid folder name: {folderNames}\n");
                 }
             }
-
         }
-
     }
 }

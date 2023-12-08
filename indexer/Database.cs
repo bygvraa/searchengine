@@ -9,12 +9,12 @@ namespace Indexer
     public class Database
     {
         private SqliteConnection _connection;
-        public Database()
+        public Database(string name)
         {
             var connectionStringBuilder = new SqliteConnectionStringBuilder();
 
             connectionStringBuilder.Mode = SqliteOpenMode.ReadWriteCreate;
-            connectionStringBuilder.DataSource = Config.DATABASE;
+            connectionStringBuilder.DataSource = Config.DATA + "/" + name + ".db";
 
             _connection = new SqliteConnection(connectionStringBuilder.ConnectionString);
             _connection.Open();
